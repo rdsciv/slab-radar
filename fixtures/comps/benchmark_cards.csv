@@ -1,0 +1,21 @@
+bench_no,year,player,set,parallel,card_no,gemrate_id,cardladder_gemrate_id,psa_gems,psa_total,card_no_label,why
+1,2023,Michael Wilson,Panini Prizm,Silver Prizm,303,,,,,REPORTED (COMC catalog),spec: 2023 Prizm Silver RC
+2,2025,Tyler Shough,Panini Prizm,Silver Prizm,327,,a9aa80f1ef3f5434fb070aa2d06e33cfa4d26f13,27,152,VERIFIED (GemRate export),spec: flagship RC
+3,2025,Tyler Shough,Panini Prizm,Silver Prizm,429,4ef3d29d2d4d915d0b4471d74d1182c8a666ff4b,4ef3d29d2d4d915d0b4471d74d1182c8a666ff4b,53,193,VERIFIED (GemRate export),spec: Rookie Variation; collides with #327 when no card no.
+4,2025,Tyler Shough,Topps Chrome,Refractor,398,fffa14d51a5c380ad08b82968e5ae42fcb1411e5,fffa14d51a5c380ad08b82968e5ae42fcb1411e5,62,221,VERIFIED (GemRate export),spec: 2025 co-flagship RC
+5,2025,Tyler Shough,Panini Donruss Optic,Holo,223,4bb867c1137262978efddf025c7fd40076636fb7,4bb867c1137262978efddf025c7fd40076636fb7,80,270,VERIFIED (GemRate export),spec: Optic Holo; 'Silver Holo' title hazard
+6,2025,Tyler Shough,Topps Chrome,Football Leather Refractor,398,a59032366987af77f31094bb4d151a9a90a16a74,a59032366987af77f31094bb4d151a9a90a16a74,34,49,VERIFIED (GemRate export),spec: numbered parallel (/150 REPORTED)
+7,2025,Tyler Shough,Panini Prizm,Autograph-Silver Prizm,327,,0ffb1e94c236f687d53b8234f5e5e2ead1019570,124,257,VERIFIED (GemRate export),spec: auto; collides with Silver #327
+8,2025,Tyler Shough,Panini Prizm,Base,327,f0bb03cfc8a80833395703fbe289958705ed1f6f,341e2edf24bcfdceefdeb4462c472942be42cf3d,16,122,VERIFIED (GemRate export),Card Ladder id != GemRate id (plan F2)
+9,2025,Tyler Shough,Panini Prizm,Lazer Prizm,327,6414b45014dd3d7b1fce8135883b0af55fca8f7c,6414b45014dd3d7b1fce8135883b0af55fca8f7c,146,319,VERIFIED (GemRate export),'Silver Lazer' title hazard
+10,2025,Tyler Shough,Panini Donruss Optic,Base,223,9448def3a1fdc100f09412e2ea4664b61322be04,6cc3036da7fd6a9f0fdd3ec6480b5b678fee5054,92,224,VERIFIED (GemRate export),Card Ladder id != GemRate id (plan F2)
+11,2025,Tyler Shough,Topps Chrome,Base,398,361ece7e8452c509286d2e51b707ded9ced41146,361ece7e8452c509286d2e51b707ded9ced41146,15,74,VERIFIED (GemRate export),Topps base RC; Base vs Refractor split
+12,2025,Tyler Shough,Panini Donruss Downtown,Base,19,40f91034f1ae684ab0bd0f58b0d448a8ebdbafac,40f91034f1ae684ab0bd0f58b0d448a8ebdbafac,1163,1655,VERIFIED (GemRate export),"highest-pop card (1,655); case-hit insert"
+13,2025,Tyler Shough,Panini Donruss,Base,304,ed79ad1c21730bd0da8899f1dc3319b0a42ba2f9,ed79ad1c21730bd0da8899f1dc3319b0a42ba2f9,54,122,VERIFIED (GemRate export),"Rated Rookie base; cheap, high volume"
+14,2025,Tyler Shough,Panini Donruss,Optic Preview-Pink,304,45d957b8de5aef5945675c1910c73c508a950ba8,45d957b8de5aef5945675c1910c73c508a950ba8,49,209,VERIFIED (GemRate export),"'Optic Preview' is Donruss, not Optic"
+15,2025,Tyler Shough,Panini Mosaic,Base,273,d22192ab15f6a1424e5a98a857d0b4105d5abcdc,d22192ab15f6a1424e5a98a857d0b4105d5abcdc,80,113,VERIFIED (GemRate export),Mosaic #273 vs #312 split
+16,2025,Tyler Shough,Panini Mosaic,Reactive Purple,312,1370cad73390bccc1a1219ad7cd38f865cec9d08,1370cad73390bccc1a1219ad7cd38f865cec9d08,69,89,VERIFIED (GemRate export),Mosaic second RC number
+17,2025,Tyler Shough,Panini Select,Silver Prizm,41,,59f5067a92bc290116da5816ef9221398dbbf2f2,50,144,VERIFIED (GemRate export),Select tiered numbering (#41/#141/#341/#441)
+18,2025,Tyler Shough,Panini Donruss,Autograph-Orange,304,a0257f813cdb71a5e0585f5ae63aff0bdc0195d9,a0257f813cdb71a5e0585f5ae63aff0bdc0195d9,48,137,VERIFIED (GemRate export),"second auto, different product"
+19,2025,Tyler Shough,Panini Prizm,Blue Wave,327,,99637068d3b5f30d70f2ba568476a4228141aa44,54,78,VERIFIED (GemRate export),low-pop parallel (78): recall stress
+20,2025,Tyler Shough,Panini Prizm Draft Picks,Gold Ice,49,,3f549387bc694739f52f0a0734b599e61b47c3f9,23,39,VERIFIED (GemRate export),pre-NFL product; 'Prizm' name collision

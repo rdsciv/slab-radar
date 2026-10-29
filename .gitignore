@@ -1,0 +1,16 @@
+# Raw GemRate exports stay local (only derived per-card aggregates in web/public/data/cards are published)
+fixtures/gemrate/
+# Generated in CI from nflverse on every build
+web/public/data/*
+!web/public/data/cards/
+# Tooling
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+node_modules/
+web/.next/
+web/out/
+*.tsbuildinfo
+.DS_Store
+.env*

@@ -1,0 +1,65 @@
+name: Radar data and GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+  schedule:
+    # Plan §9: Tue (after MNF) and Thu (stat corrections) 15:17 UTC. Not changed without Ryan's approval.
+    - cron: '17 15 * * 2'
+    - cron: '17 15 * * 4'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: slab-radar-pages
+  cancel-in-progress: false
+
+env:
+  SEASON: '2026'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v6
+      - uses: astral-sh/setup-uv@v6
+      - name: ETL tests (live nflverse checks included; GemRate fixture tests skip in CI)
+        working-directory: etl
+        run: uv run --python 3.12 pytest -q
+      - name: Build radar data from nflverse (freshness-gated to complete weeks)
+        run: uv run --project etl --python 3.12 slab-radar run --season "$SEASON" --stage nfl
+      - uses: actions/setup-node@v7
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: web/package-lock.json
+      - uses: actions/configure-pages@v5
+      - name: Web checks and static build
+        working-directory: web
+        env:
+          BASE_PATH: /slab-radar
+        run: |
+          npm ci
+          npm run typecheck
+          npm test
+          npm run build
+      - uses: actions/upload-pages-artifact@v4
+        with:
+          path: web/out
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

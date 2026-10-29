@@ -1,0 +1,13 @@
+# Breakout score weights (plan §4.6). Versioned: bump `version` on any change; shown on Methodology.
+version: "2026-10-29.1"
+weights:
+  WR/TE: {ts: 0.20, ays: 0.15, snap: 0.15, rz: 0.10, xfp: 0.25, last1: 0.15}
+  RB:    {ts: 0.15, snap: 0.15, carry: 0.20, rz: 0.15, xfp: 0.25, last1: 0.10}
+  QB:    {snap: 0.10, rz: 0.10, xfp: 0.30, dropbacks: 0.25, designed_rush: 0.15, last1: 0.10}
+# Context-flag bonuses added to the score (td_driven is a penalty, p_td).
+flags: {vacated_opportunity: 0.25, qb_change: 0.0, team_change: 0.0}
+p_td: 0.5
+nu: 4            # shrink each player's week-to-week sd toward the position sd
+min_snap_share: 0.25
+signal_p: 0.90
+noise_p: 0.70

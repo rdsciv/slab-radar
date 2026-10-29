@@ -1,0 +1,14 @@
+# Copy to holdings.yaml and fill in. One entry per lot.
+bankroll_usd: null          # e.g. 5000
+max_position_pct: null      # e.g. 0.10  (10% of bankroll per position)
+default_horizon: null       # e.g. "4w" | "season" | "12m"
+holdings:
+  - player: "Michael Wilson"
+    card: "2023 Panini Prizm Silver #?"   # include card number
+    gemrate_id: null                     # if known
+    grader: PSA                          # PSA | BGS | SGC | CGC | TAG | RAW
+    grade: 10
+    cert_no: null
+    qty: 1
+    cost_basis_usd: null                 # per copy, incl. fees
+    purchase_date: null                  # YYYY-MM-DD

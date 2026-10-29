@@ -1,0 +1,23 @@
+# GemRate "Set" → product facts. Longest matching prefix wins. Unknown prefixes → pre_nfl: null (shown "unknown", Review Queue).
+# pre_nfl = college / NIL / pre-draft product (never inferred from manufacturer; plan F6).
+# license: NFL league license for that product-year; source required (research/pop-and-grading.md Part C).
+prefixes:
+  "Panini":                               {pre_nfl: false}
+  "Donruss":                              {pre_nfl: false}
+  "Topps":                                {pre_nfl: false}
+  "Bowman University":                    {pre_nfl: true}
+  "Bowman Next":                          {pre_nfl: true}
+  "Panini Prizm Draft Picks":             {pre_nfl: true}
+  "Panini National Treasures Collegiate": {pre_nfl: true}
+  "Onit":                                 {pre_nfl: true}
+  "Onyx Vintage College":                 {pre_nfl: true}
+  "Sage":                                 {pre_nfl: true}
+  "Wild Card Alumination Nil Collegiate": {pre_nfl: true}
+  # Leaf and other Wild Card lines: unlicensed, college status varies by set → left unknown on purpose.
+license:
+  - {prefix: "Topps", years: [2025, 2026], status: licensed, label: "NFL + NFLPA (exclusive from 2026-04)",
+     source: "https://www.nfl.com/news/fanatics-collectibles-nfl-and-nflpa-announce-multi-year-licensing-deal", tag: VERIFIED}
+  - {prefix: "Panini", years: [2023, 2024, 2025], status: licensed, label: "NFL + NFLPA (pre-2026-03-31 cutoff)",
+     source: "https://sports.yahoo.com/articles/topps-football-comeback-april-2026-191037286.html", tag: REPORTED}
+  - {prefix: "Panini", years: [2026], status: unlicensed, label: "no NFL marks; individual player deals (reported)",
+     source: "https://evoretro.ca/blogs/news/panini-unlicensed-football-cards-2026-explained", tag: REPORTED}
