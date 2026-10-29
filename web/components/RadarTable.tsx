@@ -9,7 +9,7 @@ export interface RadarLine {
   id: string; name: string; pos: string; team: string; opp: string; score: number; qualifies: boolean;
   badge: 'signal' | 'noise' | null; flags: { flag: string; detail: string }[];
   ts: number | null; tsNum: number; tsDen: number; tsDelta: number | null;
-  ays: number | null; snap: number | null; snapNum: number; snapDen: number;
+  ays: number | null; aysNum: number; aysDen: number; baseGames: number; snap: number | null; snapNum: number; snapDen: number;
   carry: number | null; carryNum: number; carryDen: number;
   xfp: number | null; xfpBase: number | null; dropbacks: number | null;
   p: { p: number; window: number; metric: string; n: number } | null;
@@ -74,13 +74,13 @@ export function RadarTable({ rows }: { rows: RadarLine[] }) {
                 </td>
                 <td><Slab score={r.score} /></td>
                 <td className="n">{pct(r.ts)}<span className="sub">{r.tsNum}/{r.tsDen}</span></td>
-                <td className="n">{signedPts(r.tsDelta)}</td>
-                <td className="n hide-sm">{pct(r.ays)}</td>
+                <td className="n">{signedPts(r.tsDelta)}<span className="sub">{r.baseGames >= 2 ? `vs ${r.baseGames} games` : 'needs 2 games'}</span></td>
+                <td className="n hide-sm">{pct(r.ays)}<span className="sub">{Math.round(r.aysNum)}/{Math.round(r.aysDen)} yd</span></td>
                 <td className="n">{pct(r.snap)}<span className="sub">{r.snapNum}/{r.snapDen}</span></td>
                 <td className="n hide-sm">{pct(r.carry)}<span className="sub">{r.carryNum}/{r.carryDen}</span></td>
                 <td className="n">{num(r.xfp)}<span className="sub">base {num(r.xfpBase)}</span></td>
                 <td className="n">
-                  {r.p ? <>{pct(r.p.p)}<span className="sub">last {r.p.window} wk, n={r.p.n}</span></> : <span className="muted">—</span>}
+                  {r.p ? <>{pct(r.p.p)}<span className="sub">{r.p.metric === 'carry' ? 'carry' : 'target'} share, last {r.p.window} wk, n={r.p.n}</span></> : <span className="muted">—</span>}
                 </td>
                 <td>
                   {r.badge === 'signal' && <span className="tag signal">Signal</span>}

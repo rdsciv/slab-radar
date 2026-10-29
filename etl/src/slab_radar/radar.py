@@ -47,6 +47,7 @@ def window_rate(rows: pl.DataFrame, metric: str) -> tuple[float | None, float, f
     """Σnum/Σden (shares) or mean per game; returns (value, num, den)."""
     if metric in SHARES:
         n, d = SHARES[metric]
+        rows = rows.filter(pl.col(n).is_not_null() & pl.col(d).is_not_null())  # e.g. unmatched snap rows
         num, den = float(rows[n].sum()), float(rows[d].sum())
         return (num / den if den > 0 else None), num, den
     c = PER_GAME[metric]
@@ -89,7 +90,7 @@ def compute(fpw: pl.DataFrame, week: int, cfg: Config, priors: dict, injuries: p
     """Radar rows for `week` (one per player active that week)."""
     rng = np.random.default_rng(cfg.seed + week)
     df = weekly_values(fpw.filter(pl.col("week") <= week).with_columns(rz_opps=pl.col("rz_targets") + pl.col("rz_carries")))
-    active = df.filter(pl.col("offense_snaps") > 0)
+    active = df.filter(pl.col("active"))  # ≥1 snap, or any target/carry/attempt when the snap row is unmatched
 
     # Windows per player: last1 = this week; last3 = last 3 active games; baselines = active games before each window.
     games = active.sort("week").group_by("gsis_id", maintain_order=True).agg(pl.col("week"))
@@ -182,14 +183,17 @@ def compute(fpw: pl.DataFrame, week: int, cfg: Config, priors: dict, injuries: p
             prev_team = mine.filter(pl.col("week") == prev[-1])["team"][0]
             if prev_team != r["team"]:
                 flags.append({"flag": "team_change", "detail": f"{prev_team} → {r['team']}"})
-            now_qb, before_qb = qbmap.get((r["team"], week)), qbmap.get((prev_team, prev[-1]))
-            if now_qb and before_qb and now_qb[0] != before_qb[0] and prev_team == r["team"]:
-                flags.append({"flag": "qb_change", "detail": f"{before_qb[1]} → {now_qb[1]}"})
+        team_prev = max((w for (t, w) in qbmap if t == r["team"] and w < week), default=None)
+        now_qb, before_qb = qbmap.get((r["team"], week)), qbmap.get((r["team"], team_prev))
+        if now_qb and before_qb and now_qb[0] != before_qb[0]:  # vs the TEAM's previous game
+            flags.append({"flag": "qb_change", "detail": f"{before_qb[1]} → {now_qb[1]}"})
         share_m = "carry" if pg == "RB" else "ts"
-        for t in active.filter((pl.col("team") == r["team"]) & (pl.col("gsis_id") != pid)
-                               & (pl.col("week") < week)).select("gsis_id", "player_display_name", "position").unique().iter_rows(named=True):
-            if pos_group(t["position"]) != pg:
-                continue
+        # Vacated: a same-position teammate who played the team's previous game (first missed game only, so the
+        # flag doesn't linger for weeks or fire on long-gone players), with ≥15% share over ≥2 games, absent now.
+        team_prev_game = active.filter((pl.col("team") == r["team"]) & (pl.col("week") < week))["week"].max()
+        mates = active.filter((pl.col("team") == r["team"]) & (pl.col("week") == team_prev_game)
+                              & (pl.col("position") == r["position"]) & (pl.col("gsis_id") != pid))
+        for t in mates.select("gsis_id", "player_display_name").iter_rows(named=True):
             tb = active.filter((pl.col("gsis_id") == t["gsis_id"]) & (pl.col("team") == r["team"]) & (pl.col("week") < week))
             if tb.height < 2:
                 continue

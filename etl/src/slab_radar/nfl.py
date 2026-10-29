@@ -40,7 +40,9 @@ def pbp_player_week(pbp: pl.DataFrame) -> tuple[pl.DataFrame, pl.DataFrame]:
     team_rz = (rz.filter(((pl.col("play_type") == "pass") & pl.col("receiver_id").is_not_null())
                          | ((pl.col("play_type") == "run") & pl.col("rusher_id").is_not_null()))
                .group_by("season", "week", pl.col("posteam").alias("team")).agg(pl.len().alias("team_rz_opps")))
-    drop = (p.filter((pl.col("qb_dropback") == 1) & pl.col("passer_id").is_not_null())
+    # Dropbacks are counted on all REG non-2pt plays (not the EPA filter), so spikes and no-EPA plays still count.
+    allp = pbp.filter((pl.col("season_type") == "REG") & (pl.col("two_point_attempt").fill_null(0) == 0))
+    drop = (allp.filter((pl.col("qb_dropback") == 1) & pl.col("passer_id").is_not_null())
             .group_by("season", "week", pl.col("passer_id").alias("gsis_id")).agg(pl.len().alias("dropbacks")))
     designed = (p.filter((pl.col("play_type") == "run") & (pl.col("qb_scramble").fill_null(0) == 0)
                          & pl.col("rusher_id").is_not_null())
@@ -99,8 +101,13 @@ def build_player_week(season: int, pbp: pl.DataFrame | None = None) -> tuple[pl.
     pp = pp.with_columns(pl.col("season").cast(pl.Int32), pl.col("week").cast(pl.Int32))
     team_rz = team_rz.with_columns(pl.col("season").cast(pl.Int32), pl.col("week").cast(pl.Int32))
     base = (base.join(pp, on=KEY, how="left").join(team_rz, on=["season", "week", "team"], how="left")
-            .with_columns(pl.col("rz_targets", "rz_carries", "dropbacks", "rushes_non_scramble", "team_rz_opps").fill_null(0),
-                          pl.col("offense_snaps").fill_null(0))
+            .with_columns(pl.col("rz_targets", "rz_carries", "dropbacks", "rushes_non_scramble", "team_rz_opps").fill_null(0))
+            # Unmatched snap rows stay NULL (snap share unknown), never 0: the player still counts as active below.
+            .with_columns(active=(pl.col("offense_snaps").fill_null(0) > 0) | (pl.col("targets") > 0)
+                          | (pl.col("carries") > 0) | (pl.col("attempts") > 0))
+            # ffopportunity has no row for an active game with no opportunity: that game's xFP is 0, not missing.
+            .with_columns(xfp=pl.when(pl.col("xfp").is_null() & (pl.col("targets") == 0) & (pl.col("carries") == 0)
+                                      & (pl.col("attempts") == 0)).then(0.0).otherwise(pl.col("xfp")))
             .with_columns(designed_rushes=pl.when(pl.col("position") == "QB")
                           .then(pl.col("rushes_non_scramble")).otherwise(0))
             .drop("rushes_non_scramble"))

@@ -12,7 +12,8 @@ export function GemCell({ c }: { c: Card }) {
   const l = gemLabeled(c);
   if (!l || !c.gem) return <span className="muted">no slabs</span>;
   const x = (v: number) => `${Math.max(0, Math.min(100, v * 100))}%`;
-  const thin = c.gem.n < 30;
+  const thin = c.gem.n < 30; // raw rate greyed: the shrunk estimate leads
+  const raw: Labeled = { value: c.gem.raw_rate, provenance: 'OBSERVED', n: c.gem.n, lo: c.gem.raw_ci95[0], hi: c.gem.raw_ci95[1] };
   return (
     <span title={`Raw ${c.gems}/${c.total} = ${pct(c.gem.raw_rate)}; shrunk toward the ${c.gem.prior_level.replaceAll('_', ' ')} pool`}>
       <span className="ci" aria-hidden="true">
@@ -21,7 +22,10 @@ export function GemCell({ c }: { c: Card }) {
         <span className="raw" style={{ left: `calc(${x(c.gem.raw_rate)} - 3px)` }} />
       </span>{' '}
       <b className="num">{pct(l.value)}</b><Prov p={l.provenance} />
-      <span className="sub">{interval(l)}, n={l.n}{thin ? ', raw greyed' : `, raw ${pct(c.gem.raw_rate)}`}</span>
+      <span className="sub">{interval(l)}, n={l.n}</span>
+      <span className="sub" style={thin ? { opacity: 0.55 } : undefined}>
+        raw {pct(c.gem.raw_rate)} ({c.gems}/{c.total}), {interval(raw)}<Prov p={raw.provenance} />
+      </span>
     </span>
   );
 }

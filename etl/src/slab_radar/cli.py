@@ -76,7 +76,9 @@ def stage_nfl(season: int, out: Path) -> None:
             rank = qualified.index(r["gsis_id"]) + 1 if r["passes_min_snaps"] else None
             history.setdefault(r["gsis_id"], []).append(
                 {"week": wk, "score": r["score"], "rank": rank, "badge": r["badge"], "flags": [f["flag"] for f in r["flags"]],
-                 "p_share_up": r["p_share_up"]["p"] if r["p_share_up"] else None})
+                 "p_share_up": r["p_share_up"]["p"] if r["p_share_up"] else None,
+                 "p_metric": r["p_share_up"]["metric"] if r["p_share_up"] else None,
+                 "p_n": r["p_share_up"]["n_recent"] if r["p_share_up"] else None})
     vals = radar.weekly_values(fpw.with_columns(rz_opps=pl.col("rz_targets") + pl.col("rz_carries")))
     cols = ["week", "team", "opponent_team", "targets", "team_targets", "rec_air_yards", "team_pass_air_yards",
             "carries", "team_carries", "offense_snaps", "team_offense_snaps", "rz_opps", "team_rz_opps",

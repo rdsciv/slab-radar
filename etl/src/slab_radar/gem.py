@@ -129,6 +129,9 @@ def shrink(cards: list[dict]) -> list[dict]:
         a, b = mu * kappa + c["gems"], (1 - mu) * kappa + c["total"] - c["gems"]
         c["gem"] = {
             "raw_rate": c["gems"] / c["total"], "n": c["total"],
+            # Clopper–Pearson exact 95% interval for the raw (OBSERVED) rate
+            "raw_ci95": [float(stats.beta.ppf(0.025, c["gems"], c["total"] - c["gems"] + 1)) if c["gems"] > 0 else 0.0,
+                         float(stats.beta.ppf(0.975, c["gems"] + 1, c["total"] - c["gems"])) if c["gems"] < c["total"] else 1.0],
             "post_mean": a / (a + b), "ci95": [float(stats.beta.ppf(0.025, a, b)), float(stats.beta.ppf(0.975, a, b))],
             "prior_level": level, "prior_mu": mu, "prior_kappa": kappa,
             "provenance": "MODEL", "raw_provenance": "OBSERVED",

@@ -29,11 +29,11 @@ export default function Methodology() {
         <li><b>Target share</b> = targets / team targets. Matches nflverse <code>target_share</code> exactly (tested).</li>
         <li><b>Air-yards share</b> = receiving air yards / team <i>passer</i> air yards, nflverse&apos;s denominator. Matches nflverse <code>air_yards_share</code> exactly (tested).</li>
         <li><b>WOPR</b> = 1.5 × target share + 0.7 × air-yards share. Shown, not weighted separately, since it repeats both inputs.</li>
-        <li><b>Snap share</b> = offensive snaps / team offensive snaps (PFR). Snap rows are matched to players through nflverse&apos;s PFR id map; unmatched rows are listed below.</li>
+        <li><b>Snap share</b> = offensive snaps / team offensive snaps (PFR). Snap rows are matched to players through nflverse&apos;s PFR id map; unmatched rows are listed below, and those players stay on the radar with snap share unknown.</li>
         <li><b>Carry share</b> = carries / team carries.</li>
         <li><b>Red-zone share</b> = (red-zone targets + carries) / team red-zone targets + carries, inside the opponent 20 (<code>yardline_100 ≤ 20</code>).</li>
-        <li><b>Dropbacks</b> count pass attempts, sacks and scrambles. <b>Designed rushes</b> are QB runs that are not scrambles; kneel-downs are excluded.</li>
-        <li><b>xFP</b> <Prov p="MODEL" /> is nflverse ffopportunity&apos;s expected PPR points, an nflverse model output.</li>
+        <li><b>Dropbacks</b> count pass attempts (including spikes), sacks and scrambles. <b>Designed rushes</b> are QB runs that are not scrambles; kneel-downs are excluded.</li>
+        <li><b>xFP</b> <Prov p="MODEL" /> is nflverse ffopportunity&apos;s expected PPR points, an nflverse model output. A game with snaps but no targets, carries or attempts has no ffopportunity row and counts as 0.</li>
       </ul>
       <p>
         Play-by-play counts use the standard offensive-play filter (pass or run, with EPA and a possession team, regular
@@ -88,7 +88,7 @@ export default function Methodology() {
       <h2>Flags</h2>
       <ul>
         <li><b>TD-driven</b>: PPR points beat xFP by at least max(6, 1.5 × the position&apos;s sd of that gap) while xFP itself did not jump (self z &lt; 1).</li>
-        <li><b>Vacated targets</b>: a same-position teammate with at least 15% baseline target share (carry share for RBs) had no offensive snaps this week. The injury status is shown when the report lists one.</li>
+        <li><b>Teammate out</b>: a teammate at the same position who played the team&apos;s previous game, with at least 15% target share (carry share for RBs) over 2+ games, has no snaps this week. Only the first missed game is flagged. The injury-report status is shown when listed.</li>
         <li><b>New starting QB</b>: the team&apos;s most-dropbacks QB changed from the previous game.</li>
         <li><b>New team</b>: the player&apos;s team changed from his previous game.</li>
       </ul>
@@ -104,7 +104,7 @@ export default function Methodology() {
         Each card&apos;s rate is shrunk with a hierarchical beta-binomial model. Cards are pooled by year, product and parallel,
         then by year and product, then by year, then all cards. A pool is used only with 3+ cards and 100+ slabs; otherwise its
         parent&apos;s fit applies, and the card says which level it used. Each level&apos;s mean and concentration are fitted by
-        maximum marginal likelihood, nudged toward the parent mean. Intervals are 95% equal-tailed. 1/1s stay in the catalog
+        maximum marginal likelihood, nudged toward the parent mean. Intervals are 95% equal-tailed; the raw rate gets an exact (Clopper–Pearson) interval and is greyed under 30 slabs. 1/1s stay in the catalog
         but are left out of every pool.
       </p>
       <p>
@@ -125,7 +125,7 @@ export default function Methodology() {
       <h2>Data quality this build</h2>
       {m.warnings.length === 0 ? <p className="muted">No warnings.</p> : (
         <>
-          <p>{m.warnings.length} snap-count rows could not be matched to an nflverse player id and are excluded from snap share:</p>
+          <p>{m.warnings.length} snap-count rows could not be matched to an nflverse player id and are left out of snap share (the players stay on the radar):</p>
           <div className="table-scroll">
             <table className="grid">
               <thead><tr><th className="n">Week</th><th>Player (PFR)</th><th>Team</th><th className="n">Snaps</th></tr></thead>

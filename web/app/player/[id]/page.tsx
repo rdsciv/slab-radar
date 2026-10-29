@@ -85,7 +85,7 @@ export default async function Player({ params }: { params: Promise<{ id: string 
                     <td className="n"><Link href={r.week === m.latest_week ? '/' : `/week/${r.week}/`}>{r.week}</Link></td>
                     <td><Slab score={r.score} /></td>
                     <td className="n">{r.rank ?? <span className="muted" title="Under 25% snap share">—</span>}</td>
-                    <td className="n">{pct(r.p_share_up)}</td>
+                    <td className="n">{pct(r.p_share_up)}{r.p_metric && <span className="sub">{r.p_metric === 'carry' ? 'carry' : 'target'} share, n={r.p_n}</span>}</td>
                     <td>
                       {r.badge === 'signal' && <span className="tag signal">Signal</span>}
                       {r.badge === 'noise' && <span className="tag noise">Noise?</span>}

@@ -32,7 +32,7 @@ export interface RadarRow {
 }
 
 export interface Meta {
-  generated_ts: string; season: number; weeks: number[]; latest_week: number;
+  generated_ts: string; season: number; weeks: number[]; latest_week: number | null;
   weights: { version: string; weights: Record<string, Record<string, number>>; flags: Record<string, number>; p_td: number;
              nu: number; min_snap_share: number; signal_p: number; noise_p: number };
   priors: Record<string, [number, number] | null>;
@@ -51,11 +51,12 @@ export interface GameRow {
 
 export interface PlayerFile {
   gsis_id: string; name: string; position: string; team: string; season: number; games: GameRow[];
-  radar: { week: number; score: number; rank: number | null; badge: string | null; flags: string[]; p_share_up: number | null }[];
+  radar: { week: number; score: number; rank: number | null; badge: string | null; flags: string[]; p_share_up: number | null;
+           p_metric: 'ts' | 'carry' | null; p_n: number | null }[];
 }
 
 export interface Gem {
-  raw_rate: number; n: number; post_mean: number; ci95: [number, number]; prior_level: string;
+  raw_rate: number; raw_ci95: [number, number]; n: number; post_mean: number; ci95: [number, number]; prior_level: string;
   prior_mu: number; prior_kappa: number; scope: string;
 }
 
